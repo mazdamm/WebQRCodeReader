@@ -32,6 +32,7 @@ public class Main extends HttpServlet {
 		RequestDispatcher dispatch = request.getRequestDispatcher(jspFilePath);
 		dispatch.forward(request, response);
 		
+		System.out.println("call get method");
 //		PrintWriter writer = response.getWriter();
 //		
 //		writer.println("test");
