@@ -4,11 +4,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>QRCodeReader</title>
 </head>
 <body>
 <form action="/qrcode_reader_web/Main" enctype="multipart/form-data" method="POST">
-<h1>SampleTest2</h1>
+<h1>QRCodeReader</h1>
 <input type="file" name="fileUploader" size="50">
 <input type="submit" value="upload">
 </form>

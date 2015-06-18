@@ -56,7 +56,7 @@ public class Main extends HttpServlet {
 		ServletFileUpload sfu = new ServletFileUpload(factory);
 		
 		try{
-			List<FileItem> list = sfu.parseRequest((RequestContext) request);
+			List list = sfu.parseRequest(request);
 			Iterator iterator = list.iterator();
 			while(iterator.hasNext()){
 				FileItem item = (FileItem)iterator.next();
