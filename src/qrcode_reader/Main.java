@@ -1,9 +1,9 @@
 package qrcode_reader;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,11 +11,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.apache.tomcat.util.http.fileupload.RequestContext;
+import org.apache.tomcat.util.http.fileupload.FileItemIterator;
+import org.apache.tomcat.util.http.fileupload.FileItemStream;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.Result;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.HybridBinarizer;
+
+
 
 /**
  * Servlet implementation class Main
@@ -24,49 +32,55 @@ import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 public class Main extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * Default constructor. 
-     */
-    public Main() {
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * Default constructor. 
+	 */
+	public Main() {
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String jspFilePath = "/jsp/test.jsp";
-		
+
 		RequestDispatcher dispatch = request.getRequestDispatcher(jspFilePath);
 		dispatch.forward(request, response);
-		
+
 		System.out.println("call get method");
-//		PrintWriter writer = response.getWriter();
-//		
-//		writer.println("test");
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	
+
 		DiskFileItemFactory factory = new DiskFileItemFactory();
-		ServletFileUpload sfu = new ServletFileUpload(factory);
-		
+		ServletFileUpload upload = new ServletFileUpload(factory);
+
+
 		try{
-			List list = sfu.parseRequest(request);
-			Iterator iterator = list.iterator();
-			while(iterator.hasNext()){
-				FileItem item = (FileItem)iterator.next();
-				System.out.println(item.getName());
+			FileItemIterator iter = upload.getItemIterator(request);
+			
+			while (iter.hasNext()) {
+				FileItemStream item = iter.next();
+				BufferedImage image = ImageIO.read(item.openStream());
+				LuminanceSource source = new BufferedImageLuminanceSource(image);
+				BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+				// . デコード
+				MultiFormatReader reader = new MultiFormatReader();
+				Result result = reader.decode(bitmap);
+
+				// . バーコードコンテンツ（読み取り結果）
+				String text = result.getText();
+				System.out.println(text);
 			}
-		} catch(FileUploadException e){
+		} catch(Exception e){
 			e.printStackTrace();
 		}
 		String jspFilePath = "/jsp/test.jsp";
-		
+
 		RequestDispatcher dispatch = request.getRequestDispatcher(jspFilePath);
 		dispatch.forward(request, response);
 		System.out.println("call post method");
