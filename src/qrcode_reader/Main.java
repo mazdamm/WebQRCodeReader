@@ -57,28 +57,18 @@ public class Main extends HttpServlet {
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
-
-
+		String text = new String();
 		try{
 			FileItemIterator iter = upload.getItemIterator(request);
-			
 			while (iter.hasNext()) {
 				FileItemStream item = iter.next();
-				BufferedImage image = ImageIO.read(item.openStream());
-				LuminanceSource source = new BufferedImageLuminanceSource(image);
-				BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-
-				// . デコード
-				MultiFormatReader reader = new MultiFormatReader();
-				Result result = reader.decode(bitmap);
-
-				// . バーコードコンテンツ（読み取り結果）
-				String text = result.getText();
-				System.out.println(text);
+				text = new QRCodeReader().getQRCode(item.openStream());
 			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		
+		System.out.println(text);
 		String jspFilePath = "/jsp/test.jsp";
 
 		RequestDispatcher dispatch = request.getRequestDispatcher(jspFilePath);
