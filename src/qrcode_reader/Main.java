@@ -42,7 +42,7 @@ public class Main extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String jspFilePath = "/jsp/test.jsp";
+		String jspFilePath = "/jsp/input.jsp";
 
 		RequestDispatcher dispatch = request.getRequestDispatcher(jspFilePath);
 		dispatch.forward(request, response);
@@ -66,13 +66,14 @@ public class Main extends HttpServlet {
 			FileItemStream item = upload.getItemIterator(request).next();
 
 			text = QRCodeDecoder.decodeQRCode(ImageIO.read(item.openStream()));
+			request.setAttribute("result", text);
 			//			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 
 		System.out.println(text);
-		String jspFilePath = "/jsp/test.jsp";
+		String jspFilePath = "/jsp/result.jsp";
 
 		RequestDispatcher dispatch = request.getRequestDispatcher(jspFilePath);
 		dispatch.forward(request, response);
