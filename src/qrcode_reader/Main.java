@@ -57,17 +57,20 @@ public class Main extends HttpServlet {
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
-		String text = new String();
+		String text = "";
 		try{
-			FileItemIterator iter = upload.getItemIterator(request);
-			while (iter.hasNext()) {
-				FileItemStream item = iter.next();
-				text = new QRCodeReader().getQRCode(item.openStream());
-			}
+//			FileItemIterator iter = upload.getItemIterator(request);
+//			//			while (iter.hasNext()) {
+//			FileItemStream item = iter.next();
+			
+			FileItemStream item = upload.getItemIterator(request).next();
+
+			text = QRCodeDecoder.decodeQRCode(ImageIO.read(item.openStream()));
+			//			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		
+
 		System.out.println(text);
 		String jspFilePath = "/jsp/test.jsp";
 
