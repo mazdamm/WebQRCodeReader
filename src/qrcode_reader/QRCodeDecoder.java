@@ -20,7 +20,6 @@ public class QRCodeDecoder {
 		}
 		
 		try{
-//			BufferedImage image = ImageIO.read(inputStream);
 			LuminanceSource source = new BufferedImageLuminanceSource(image);
 			BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 
@@ -30,7 +29,6 @@ public class QRCodeDecoder {
 
 			// . バーコードコンテンツ（読み取り結果）
 			text = result.getText();
-			System.out.println(text);
 		} catch (Exception e){
 			e.printStackTrace();
 			throw new Exception(e);

@@ -13,7 +13,7 @@
 <input type="submit" value="upload">
 <br>
 <br>
-<div>結果：</div>
+<div>読込結果：</div>
 <%= request.getAttribute("result") %> 
 </form>
 </body>
