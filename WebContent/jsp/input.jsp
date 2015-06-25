@@ -10,8 +10,25 @@
 <body>
 <form action="/qrcode_reader_web/Main" enctype="multipart/form-data" method="POST">
 <h1>QRCodeReader</h1>
-<input type="file" name="fileUploader" size="50">
+<input id = "file" type="file" name="fileUploader" size="50">
+<img src = "" id = "preview" style="display:none;">
 <input type="submit" value="upload">
 </form>
+<script>
+	$("#file").change(
+			function(){
+				if( !this.files.length){
+					return;
+				}
+				
+				var file = $(this).prop('files')[0];
+				var fr = new FileReader();
+				fr.onload = function(){
+					 $('#preview').attr('src', fr.result ).css('display','inline');
+		        }
+		        fr.readAsDataURL(file);
+			}
+		);
+</script>
 </body>
 </html>
